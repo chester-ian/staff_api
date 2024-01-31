@@ -1,4 +1,6 @@
-Basic API Implementation for Staff Records
+BASIC API IMPLEMENTATION FOR STAFF RECORDS
+
+
 
 INSTALLATION INSTRUCTIONS
 REQUIREMENTS : Existing MYSQL instance, composer and PHP 8.1 or later
