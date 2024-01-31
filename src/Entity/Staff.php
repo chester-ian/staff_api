@@ -40,6 +40,9 @@ class Staff
     #[ORM\Column(length: 255)]
     private ?string $notes = null;
 
+    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    private ?\DateTimeInterface $startDate = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -125,6 +128,18 @@ class Staff
     public function setNotes(string $notes): static
     {
         $this->notes = $notes;
+
+        return $this;
+    }
+
+    public function getStartDate(): ?\DateTimeInterface
+    {
+        return $this->startDate;
+    }
+
+    public function setStartDate(\DateTimeInterface $startDate): static
+    {
+        $this->startDate = $startDate;
 
         return $this;
     }

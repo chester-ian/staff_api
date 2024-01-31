@@ -7,6 +7,7 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Query\ResultSetMapping;
+use Datetime;
 
 /**
  * @extends ServiceEntityRepository<Staff>
@@ -30,7 +31,7 @@ class StaffRepository extends ServiceEntityRepository
         if ($id == 0) 
         {
             // Your SQL query
-            $sql = "SELECT id,email,firstname,lastname,squad,status,notes FROM staff LIMIT 1000";
+            $sql = "SELECT id,email,CONCAT(firstname,' ',lastname) as fullname ,squad,status,notes,start_date FROM staff LIMIT 1000";
             $connection = $this->em->getConnection();
             $stmt = $connection->prepare($sql);
             $stmt->execute();
@@ -38,7 +39,7 @@ class StaffRepository extends ServiceEntityRepository
         }
         elseif ($id > 0) 
         {
-            $sql = "SELECT id,email,firstname,lastname,squad,status,notes FROM staff WHERE id = :id ";
+            $sql = "SELECT id,email,CONCAT(firstname,' ',lastname) as fullname,squad,status,notes,start_date FROM staff WHERE id = :id ";
             $connection = $this->em->getConnection();
             $stmt = $connection->prepare($sql);
             $stmt->bindParam(':id', $id, \PDO::PARAM_INT);
@@ -53,19 +54,22 @@ class StaffRepository extends ServiceEntityRepository
         try{
             $myData = $this->em->getRepository(Staff::class)->find($id);
             if ($myData){
-                $myData->setEmail($content->email);
-                $myData->setPassword($content->password);
-                $myData->setFirstname($content->firstname);
-                $myData->setLastname($content->lastname);
-                $myData->setSquad($content->squad);
-                $myData->setStatus($content->status);
-                $myData->setNotes($content->notes);
+                $myData->setEmail($content['email']);
+                $myData->setPassword($content['password']);
+                $myData->setFirstname($content['firstname']);
+                $myData->setLastname($content['lastname']);
+                $myData->setSquad($content['squad']);
+                $myData->setStatus($content['squad']);
+                $myData->setNotes($content['notes']);
+                $tmpDate = $content['start_date'];
+                $startDate = new DateTime($tmpDate);
+                $myData->setStartDate($startDate);
                 $this->em->persist($myData);
                 $this->em->flush();
             }
         }
         catch(\Exception $e){
-            return 0;
+            throw new \Exception($e->getMessage());
         }
         return 1;
     }
@@ -75,19 +79,22 @@ class StaffRepository extends ServiceEntityRepository
         try{
             // Create a new staff
             $newStaff = new Staff();
-            $newStaff->setEmail($content->email);
-            $newStaff->setPassword($content->password);
-            $newStaff->setFirstname($content->firstname);
-            $newStaff->setLastname($content->lastname);
-            $newStaff->setSquad($content->squad);
-            $newStaff->setStatus($content->status);
-            $newStaff->setNotes($content->notes);
+            $newStaff->setEmail($content['email']);
+            $newStaff->setPassword($content['password']);
+            $newStaff->setFirstname($content['firstname']);
+            $newStaff->setLastname($content['lastname']);
+            $newStaff->setSquad($content['squad']);
+            $newStaff->setStatus($content['status']);
+            $newStaff->setNotes($content['notes']);
+            $tmpDate = $content['start_date'];
+            $startDate = new DateTime($tmpDate);
+            $newStaff->setStartDate($startDate);
             $this->em->persist($newStaff);
             $this->em->flush();
             return $newStaff->getId();
         }
         catch(\Exception $e){
-            return 0;
+            throw new \Exception($e->getMessage());
         }
     }
 
@@ -101,7 +108,7 @@ class StaffRepository extends ServiceEntityRepository
             }
         }
         catch(\Exception $e){
-            return 0;
+            throw new \Exception($e->getMessage());
         }
         return 1;
     }

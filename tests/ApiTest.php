@@ -19,17 +19,25 @@ class ApiTest extends WebTestCase
     {
         //ADD
         $email = 'xxxx'.date("YmdHis")."@test.com";
+        $postData = [
+            [
+                "id" => 43,
+                "email" => $email,
+                "firstname" => "Michael",
+                "lastname" => "Jackson",
+                "password" => "password",
+                "squad" => "squad3",
+                "status" => "active",
+                "notes" => "mynotes",
+                "start_date" => "2024-01-01 12:00:00",
+            ]
+        ];
+        // Make a POST request to the API
         $response = $this->client->request('POST', $this->host.'/api/staff', [
-            'json' => [
-                'email' => $email,
-                'password' => 'testpassword',
-                'firstname' => 'John',
-                'lastname' => 'Doe',
-                'status' => 'active',
-                'squad' => 'squad1',
-                'notes' => 'Test notes',
-            ],
+            'headers' => ['Content-Type' => 'application/json'],
+            'json' => $postData,
         ]);
+
         $this->assertSame(200, $response->getStatusCode());
         $this->assertJson($response->getContent());
         $data = json_decode($response->getContent(),true);
@@ -43,8 +51,8 @@ class ApiTest extends WebTestCase
         $this->assertIsArray($data);
         
         $this->assertArrayHasKey('email', $data[0]);
-        $this->assertArrayHasKey('firstname', $data[0]);
-        $this->assertArrayHasKey('lastname', $data[0]);
+        $this->assertArrayHasKey('fullname', $data[0]);
+        $this->assertArrayHasKey('start_date', $data[0]);
         $this->assertArrayHasKey('squad', $data[0]);
         $this->assertArrayHasKey('status', $data[0]);
         $this->assertArrayHasKey('notes', $data[0]);
@@ -58,8 +66,8 @@ class ApiTest extends WebTestCase
         $data = json_decode($response->getContent(),true);
         $this->assertIsArray($data);
         $this->assertArrayHasKey('email', $data[0]);
-        $this->assertArrayHasKey('firstname', $data[0]);
-        $this->assertArrayHasKey('lastname', $data[0]);
+        $this->assertArrayHasKey('fullname', $data[0]);
+        $this->assertArrayHasKey('start_date', $data[0]);
         $this->assertArrayHasKey('squad', $data[0]);
         $this->assertArrayHasKey('status', $data[0]);
         $this->assertArrayHasKey('notes', $data[0]);
@@ -67,17 +75,25 @@ class ApiTest extends WebTestCase
 
         //PUT
         $email = 'xxxx'.date("YmdHis")."@test.com";
-        $response = $this->client->request('PUT', $this->host.'/api/staff/'.$tmpid, [
-            'json' => [
-                'email' => $email,
+        $putData = [
+            [
+                "email" => $email,
                 'password' => 'testpassword',
                 'firstname' => 'John',
                 'lastname' => 'Doe',
                 'status' => 'active',
+                'start_date' => '2024-01-01 00:00:00',
                 'squad' => 'squad1',
                 'notes' => 'Test notes',
-            ],
+            ]
+        ];
+
+        // Make a PUT request to the API
+        $response = $this->client->request('PUT', $this->host.'/api/staff/'.$tmpid, [
+            'headers' => ['Content-Type' => 'application/json'],
+            'json' => $putData,
         ]);
+
         $this->assertSame(200, $response->getStatusCode());
         $this->assertJson($response->getContent());
         $data = json_decode($response->getContent(),true);

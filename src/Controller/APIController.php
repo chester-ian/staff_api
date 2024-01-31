@@ -83,7 +83,7 @@ class APIController extends AbstractController
             $response_msg = new JsonResponse($message);
             return $response_msg; 
         }
-        $objStaff = json_decode($content);
+        $objStaff = json_decode($content,true);
         //validation of critical content body fields
         $res = $this->validateContent($em, "POST", $objStaff);
         if ($res != 1){
@@ -92,16 +92,16 @@ class APIController extends AbstractController
             return $response_msg;     
         }
         try{
-            $result = $em->getRepository(Staff::class)->addStaff($objStaff);
-            if (is_numeric($result)){
+            
+            if (is_numeric($em->getRepository(Staff::class)->addStaff($objStaff[0]))){
                 $message = ['status' => 'message','msg' => 'Record Has Been Successfully Added',];
                 $response_msg = new JsonResponse($message);
                 return $response_msg;
             }
         }
         catch(\Exception $e){
-                error_log($e->getMessage());
-                return new JsonResponse($e->getMessage());
+            $message = ['status' => 'message','msg' => 'There was an error in adding a record.',];
+            return new JsonResponse($message);
         }
     }
 
@@ -122,7 +122,7 @@ class APIController extends AbstractController
             $response_msg = new JsonResponse($message);
             return $response_msg; 
         }
-        $objStaff = json_decode($content);
+        $objStaff = json_decode($content,true);
         //validation of critical content body fields
         $res = $this->validateContent($em, "PUT", $objStaff, $id);
         if ($res != 1){
@@ -132,17 +132,15 @@ class APIController extends AbstractController
         }
 
         try{
-            $result = $em->getRepository(Staff::class)->updateStaff($id,$objStaff);
-            if (is_numeric($result)){
+            if (is_numeric($em->getRepository(Staff::class)->updateStaff($id,$objStaff[0]))){
                 $message = ['status' => 'message','msg' => 'Record Has Been Successfully Updated',];
                 $response_msg = new JsonResponse($message);
                 return $response_msg;
             }
-            
         }
         catch(\Exception $e){
-                error_log($e->getMessage());
-                return new JsonResponse($e->getMessage());
+                $message = ['status' => 'message','msg' => 'There was an error in updating a record.',];
+                return new JsonResponse($message);
         }
     }
 
@@ -175,8 +173,8 @@ class APIController extends AbstractController
             
         }
         catch(\Exception $e){
-                error_log($e->getMessage());
-                return new JsonResponse($e->getMessage());
+            $message = ['status' => 'message','msg' => 'There was an error in deleting a record.',];
+            return new JsonResponse($message);
         }
 
     }
@@ -192,13 +190,13 @@ class APIController extends AbstractController
         $validStatusOptions = array("ACTIVE","INACTIVE");
         switch($method) {
             case "POST":
-                if (!$em->getRepository(Staff::class)->isValidEmail($objStaff->email)){
+                if (!$em->getRepository(Staff::class)->isValidEmail($objStaff[0]['email'])){
                     return "Email is not valid";
                 }
-                if (!in_array(strtoupper($objStaff->status),$validStatusOptions)){
+                if (!in_array(strtoupper($objStaff[0]['status']),$validStatusOptions)){
                     return "Status is not valid";
                 }
-                if (!in_array(strtoupper($objStaff->squad),$validSquadOptions)){
+                if (!in_array(strtoupper($objStaff[0]['squad']),$validSquadOptions)){
                     return "Squad is not valid";
                 }
                 return 1;
@@ -207,10 +205,10 @@ class APIController extends AbstractController
                 if (!$em->getRepository(Staff::class)->isValidId($id)){
                     return "Id is not valid";
                 }
-                if (!in_array(strtoupper($objStaff->status),$validStatusOptions)){
+                if (!in_array(strtoupper($objStaff[0]['status']),$validStatusOptions)){
                     return "Status is not valid";
                 }
-                if (!in_array(strtoupper($objStaff->squad),$validSquadOptions)){
+                if (!in_array(strtoupper($objStaff[0]['squad']),$validSquadOptions)){
                     return "Squad is not valid";
                 }
                 break;
