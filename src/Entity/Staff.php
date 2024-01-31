@@ -6,6 +6,12 @@ use App\Repository\StaffRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
+
+#TODO : 
+# create doctrine to do enum on mysql, please possible reference below
+# https://www.doctrine-project.org/projects/doctrine-orm/en/2.17/cookbook/mysql-enums.html
+# https://www.doctrine-project.org/projects/doctrine-laminas-hydrator/en/3.4/enum-strategy.html
+
 #[ORM\Entity(repositoryClass: StaffRepository::class)]
 class Staff
 {
@@ -14,7 +20,7 @@ class Staff
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 50)]
+    #[ORM\Column(length: 50, unique: true)]
     private ?string $email = null;
 
     #[ORM\Column(type: Types::TEXT)]
@@ -88,12 +94,12 @@ class Staff
         return $this;
     }
 
-    public function getStatus(): ?array
+    public function getStatus(): ?string
     {
         return $this->status;
     }
 
-    public function setStatus(?array $status): static
+    public function setStatus(?string $status): static
     {
         $this->status = $status;
 
