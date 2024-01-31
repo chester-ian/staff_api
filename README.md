@@ -6,13 +6,14 @@ INSTALLATION INSTRUCTIONS
 REQUIREMENTS : Existing MYSQL instance, composer and PHP 8.1 or later
 1) Clone the repository in a directory in local machine
 2) Open a terminal and go to the directory where the repository was cloned. Run 'composer install' (This will install necessary modules)
-3) In the directory create and .env file (sample file has been sent via email)
-4) Start Symfony , Run 'symfony server:start' in the terminal
-5) Create an empty "staff" table in MySQL using doctrine. Go to your directory and run 'php bin/console doctrine:migrations:migrate' .
-6) Create few records for testing using 'fixtures.sql'
-7) Run a basic unit testing script (PHPUnit) by running 'php bin/phpunit' . This should test basic add, edit, delete, get rooutes
-8) A Basic OpenAPI Spec (Swagger Doc) should be available in http://localhost:8000/api/doc
-9) Test the routes in postman or and endopint testing tool.
+3) In your MySQL instance create an empty DB.
+4) Edit the .env file to connect to your newly created DB.
+5) Start Symfony , Run 'symfony server:start' in the terminal
+6) Create an empty "staff" table in MySQL using doctrine. Go to your directory and run 'php bin/console doctrine:migrations:migrate' .
+7) Create few records for testing using 'fixtures.sql'
+8) Run a basic unit testing script (PHPUnit) by running 'php bin/phpunit' . This should test basic add, edit, delete, get rooutes
+9) A Basic OpenAPI Spec (Swagger Doc) should be available in http://localhost:8000/api/doc
+10) Test the routes in postman or and endopint testing tool.
 
 
 
