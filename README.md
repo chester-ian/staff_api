@@ -23,7 +23,7 @@ Due to the time constraints , I have listed a couple of TODOs that should be the
 
 a) authentication - passwords are currently not being hashed(with salt) , HTTPS(TLS/SSL) should be implemented
 
-b) input sanitization - there are some validation of input in place but each fields should have a thorough sanitization for security and integrity of the data
+b) input sanitization - there are some validation of input in place but each fields should have a thorough sanitization for security and integrity of the data. An example is that email is not being validated if its in a valid email address format.
 
 c) Some of the sanitization are still in controller, it has been suggested in the code that it should be isolated (loosely couple) .
 
